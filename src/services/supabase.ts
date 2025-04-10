@@ -1,7 +1,6 @@
-
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '@/integrations/supabase/client';
 import { ConnectionStatus, RotationEvent, TimeFilter, WasteStats } from '@/types/waste-data';
-import { toast } from '@/components/ui/sonner';
+import { toast } from "sonner";
 
 // Ces valeurs seront à remplacer par vos propres informations de connexion Supabase
 // Pour le moment, nous utilisons des valeurs par défaut pour le développement
@@ -9,7 +8,7 @@ const supabaseUrl = 'https://votre-projet.supabase.co';
 const supabaseKey = 'votre-clé-api-supabase';
 
 // Créer un client Supabase
-const supabase = createClient(supabaseUrl, supabaseKey);
+// const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Récupérer les événements de rotation avec filtrage temporel
 export async function getRotationEvents(filter: TimeFilter = 'all'): Promise<RotationEvent[]> {

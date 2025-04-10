@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
   Select, 
@@ -10,7 +9,8 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RotationEvent, TimeFilter } from "@/types/waste-data";
 import { getChartData } from "@/services/supabase";
-import { BarChart, LineChart } from "@/components/ui/chart";
+import { ChartContainer } from "@/components/ui/chart";
+import { BarChart, LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Bar, Line } from "recharts";
 
 interface ActivityChartProps {
   data: RotationEvent[];
@@ -19,10 +19,8 @@ interface ActivityChartProps {
 }
 
 export function ActivityChart({ data, timeFilter, onTimeFilterChange }: ActivityChartProps) {
-  // Utiliser la fonction getChartData pour préparer les données pour les graphiques
   const { labels, bac1Data, bac2Data, weightData } = getChartData(data, timeFilter);
 
-  // Données pour le graphique de barres (rotations)
   const barChartData = {
     labels,
     datasets: [
@@ -39,7 +37,6 @@ export function ActivityChart({ data, timeFilter, onTimeFilterChange }: Activity
     ],
   };
 
-  // Données pour le graphique linéaire (poids)
   const lineChartData = {
     labels,
     datasets: [
@@ -53,6 +50,13 @@ export function ActivityChart({ data, timeFilter, onTimeFilterChange }: Activity
       },
     ],
   };
+
+  const rechartsData = labels.map((label, index) => ({
+    name: label,
+    bac1: bac1Data[index],
+    bac2: bac2Data[index],
+    poids: weightData[index]
+  }));
 
   return (
     <Card>
@@ -87,7 +91,37 @@ export function ActivityChart({ data, timeFilter, onTimeFilterChange }: Activity
                 Aucune donnée disponible
               </div>
             ) : (
-              <BarChart data={barChartData} />
+              <ChartContainer config={{}} className="w-full h-full">
+                <BarChart
+                  width={500}
+                  height={300}
+                  data={rechartsData}
+                  margin={{
+                    top: 20,
+                    right: 30,
+                    left: 20,
+                    bottom: 5,
+                  }}
+                >
+                  <defs>
+                    <linearGradient id="colorBac1" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0.1}/>
+                    </linearGradient>
+                    <linearGradient id="colorBac2" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#6366f1" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#6366f1" stopOpacity={0.1}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="bac1" name="Bac 1" fill="url(#colorBac1)" />
+                  <Bar dataKey="bac2" name="Bac 2" fill="url(#colorBac2)" />
+                </BarChart>
+              </ChartContainer>
             )}
           </TabsContent>
           <TabsContent value="weight" className="h-80">
@@ -96,7 +130,33 @@ export function ActivityChart({ data, timeFilter, onTimeFilterChange }: Activity
                 Aucune donnée disponible
               </div>
             ) : (
-              <LineChart data={lineChartData} />
+              <ChartContainer config={{}} className="w-full h-full">
+                <LineChart
+                  width={500}
+                  height={300}
+                  data={rechartsData}
+                  margin={{
+                    top: 20,
+                    right: 30,
+                    left: 20,
+                    bottom: 5,
+                  }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Line 
+                    type="monotone" 
+                    dataKey="poids" 
+                    name="Poids (kg)"
+                    stroke="#10b981" 
+                    activeDot={{ r: 8 }}
+                    strokeWidth={2}
+                  />
+                </LineChart>
+              </ChartContainer>
             )}
           </TabsContent>
         </Tabs>

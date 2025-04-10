@@ -5,7 +5,7 @@ import { WasteEventsTable } from "@/components/WasteEventsTable";
 import { ActivityChart } from "@/components/ActivityChart";
 import { RotationEvent, TimeFilter, WasteStats } from "@/types/waste-data";
 import { getRotationEvents, getConnectionStatus, calculateStats } from "@/services/supabase";
-import { toast } from "@/components/ui/sonner";
+import { toast } from "sonner";
 
 const DEFAULT_REFRESH_INTERVAL = 30000; // 30 secondes
 
