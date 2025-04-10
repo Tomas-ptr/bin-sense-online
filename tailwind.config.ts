@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,17 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Custom colors for waste management
+				status: {
+					online: '#10b981',
+					offline: '#ef4444',
+				},
+				waste: {
+					primary: '#0ea5e9',
+					secondary: '#6366f1',
+					light: '#e0f2fe',
+					dark: '#0c4a6e',
 				}
 			},
 			borderRadius: {
@@ -84,11 +96,16 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'pulse-slow': {
+					'0%, 100%': { opacity: '1' },
+					'50%': { opacity: '0.5' },
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'pulse-slow': 'pulse-slow 2s ease-in-out infinite'
 			}
 		}
 	},
