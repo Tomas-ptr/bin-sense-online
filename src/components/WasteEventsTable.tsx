@@ -31,11 +31,13 @@ export function WasteEventsTable({ data }: WasteEventsTableProps) {
 
   // Mettre à jour les données filtrées lorsque les données ou les filtres changent
   useEffect(() => {
+    console.log(`WasteEventsTable: Traitement de ${data.length} événements`);
     let result = [...data];
 
     // Filtre par bac
     if (filter.bac !== 'all') {
       result = result.filter(item => item.bac === filter.bac);
+      console.log(`Après filtre bac "${filter.bac}": ${result.length} événements`);
     }
 
     // Filtre par recherche
@@ -47,6 +49,7 @@ export function WasteEventsTable({ data }: WasteEventsTableProps) {
           item.id.toString().includes(searchLower) ||
           new Date(item.created_at).toLocaleString('fr-FR').toLowerCase().includes(searchLower)
       );
+      console.log(`Après filtre recherche "${filter.search}": ${result.length} événements`);
     }
 
     setFilteredData(result);

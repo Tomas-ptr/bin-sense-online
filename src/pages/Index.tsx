@@ -28,15 +28,26 @@ const Index = () => {
   const loadData = useCallback(async () => {
     setIsLoading(true);
     try {
+      console.log('Chargement des données...');
+      
       // Récupérer les données
       const [events, status] = await Promise.all([
         getRotationEvents(timeFilter),
         getConnectionStatus()
       ]);
 
+      console.log(`${events.length} événements récupérés`);
+      
       // Mettre à jour l'état
       setRotationEvents(events);
       setStats(calculateStats(events, status));
+      
+      if (events.length === 0) {
+        console.log('Aucun événement trouvé pour le filtre:', timeFilter);
+        toast.info('Aucune donnée disponible', {
+          description: 'Aucun événement de rotation trouvé pour la période sélectionnée.'
+        });
+      }
     } catch (error) {
       console.error('Erreur lors du chargement des données:', error);
       toast.error('Erreur de chargement', {
@@ -72,6 +83,7 @@ const Index = () => {
 
   // Gérer le changement de filtre temporel
   const handleTimeFilterChange = (filter: TimeFilter) => {
+    console.log('Changement de filtre temporel:', filter);
     setTimeFilter(filter);
   };
 

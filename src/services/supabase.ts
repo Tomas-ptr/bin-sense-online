@@ -1,18 +1,13 @@
+
 import { supabase } from '@/integrations/supabase/client';
 import { ConnectionStatus, RotationEvent, TimeFilter, WasteStats } from '@/types/waste-data';
 import { toast } from "sonner";
 
-// Ces valeurs seront à remplacer par vos propres informations de connexion Supabase
-// Pour le moment, nous utilisons des valeurs par défaut pour le développement
-const supabaseUrl = 'https://votre-projet.supabase.co';
-const supabaseKey = 'votre-clé-api-supabase';
-
-// Créer un client Supabase
-// const supabase = createClient(supabaseUrl, supabaseKey);
-
 // Récupérer les événements de rotation avec filtrage temporel
 export async function getRotationEvents(filter: TimeFilter = 'all'): Promise<RotationEvent[]> {
   try {
+    console.log('Fetching rotation events with filter:', filter);
+    
     let query = supabase.from('tomasv2').select('*').order('created_at', { ascending: false });
 
     // Appliquer le filtre temporel
@@ -41,7 +36,11 @@ export async function getRotationEvents(filter: TimeFilter = 'all'): Promise<Rot
       return [];
     }
 
-    return data as RotationEvent[];
+    if (data) {
+      console.log(`Récupération de ${data.length} événements de rotation`);
+    }
+
+    return data as RotationEvent[] || [];
   } catch (error) {
     console.error('Exception lors de la récupération des événements de rotation:', error);
     toast.error('Erreur de connexion', {
@@ -54,6 +53,8 @@ export async function getRotationEvents(filter: TimeFilter = 'all'): Promise<Rot
 // Récupérer le dernier statut de connexion
 export async function getConnectionStatus(): Promise<ConnectionStatus | null> {
   try {
+    console.log('Fetching connection status');
+    
     const { data, error } = await supabase
       .from('status_connexion')
       .select('*')
@@ -66,6 +67,12 @@ export async function getConnectionStatus(): Promise<ConnectionStatus | null> {
         description: 'Impossible de charger le statut de connexion.'
       });
       return null;
+    }
+
+    if (data && data.length > 0) {
+      console.log('Status de connexion récupéré:', data[0]);
+    } else {
+      console.log('Aucun statut de connexion trouvé');
     }
 
     return data.length > 0 ? (data[0] as ConnectionStatus) : null;
