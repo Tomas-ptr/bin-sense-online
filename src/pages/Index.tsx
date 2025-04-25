@@ -3,6 +3,7 @@ import { useEffect, useState, useCallback } from "react";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { WasteEventsTable } from "@/components/WasteEventsTable";
 import { ActivityChart } from "@/components/ActivityChart";
+import { ProjectBanner } from "@/components/ProjectBanner";
 import { RotationEvent, TimeFilter, WasteStats } from "@/types/waste-data";
 import { getRotationEvents, getConnectionStatus, calculateStats } from "@/services/supabase";
 import { toast } from "sonner";
@@ -104,6 +105,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <ProjectBanner />
       <div className="container py-8 space-y-8">
         <DashboardHeader
           stats={stats}
